@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/etNombre" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Nombre" android:layout_marginBottom="8dp"/>
+    <EditText android:id="@+id/etPais" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="País al que pertenece" android:layout_marginBottom="8dp"/>
+    <EditText android:id="@+id/etAlcalde" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Alcalde" android:layout_marginBottom="8dp"/>
+    <EditText android:id="@+id/etClima" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Clima" android:layout_marginBottom="16dp"/>
+
+    <Button android:id="@+id/btnGuardar" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Guardar"/>
+
+</LinearLayout>

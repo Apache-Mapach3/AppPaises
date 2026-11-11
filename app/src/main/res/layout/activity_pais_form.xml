@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText android:id="@+id/etNombre" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Nombre" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etPresidente" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Presidente" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etContinente" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Continente" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etHimno" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Nombre del Himno" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etHabitantes" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Número de Habitantes" android:inputType="number" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etDepartamentos" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Número de Departamentos" android:inputType="number" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etMunicipios" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Número de Municipios" android:inputType="number" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etIdioma" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Idioma Principal" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etUniversidades" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Número de Universidades" android:inputType="number" android:layout_marginBottom="8dp"/>
+        <EditText android:id="@+id/etDemocracia" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Tipo de Democracia" android:layout_marginBottom="16dp"/>
+
+        <Button android:id="@+id/btnGuardar" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Guardar"/>
+
+    </LinearLayout>
+</ScrollView>

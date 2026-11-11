@@ -1,19 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Menú Principal"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="40dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btnPaises"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🌎 Gestión de Países"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnCiudades"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🏙️ Gestión de Ciudades"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnReportes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📊 Reportes"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnSensores"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📱 Sensores"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cerrar Sesión"
+        style="?android:attr/borderlessButtonStyle"/>
+
+</LinearLayout>
