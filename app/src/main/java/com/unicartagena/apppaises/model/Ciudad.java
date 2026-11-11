@@ -1,6 +1,6 @@
 package com.unicartagena.apppaises.model;
 
-public class Ciudad {
+public class Ciudad implements java.io.Serializable {
     private Long id;
     private String nombre;
     private String paisPertenece;
