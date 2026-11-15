@@ -1,13 +1,11 @@
 package com.unicartagena.apppaises.ui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +20,10 @@ public class SensoresActivity extends AppCompatActivity implements SensorEventLi
     private Sensor sensorLuz, sensorAcelerometro;
     private TextView tvLuz, tvTema, tvAcelerometro;
 
-    private float ultimoX = 0, ultimoY = 0, ultimoZ = 0;
-    private long ultimoTiempoMovimiento = 0;
-    private static final int UMBRAL_AGITACION = 15; // Sensibilidad del agitado
+    private float[] ultimaAceleracion = new float[3];
+    private long ultimoTiempoShake = 0;
+    private static final float UMBRAL_SHAKE = 15f;
+    private boolean primeraLectura = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,6 @@ public class SensoresActivity extends AppCompatActivity implements SensorEventLi
         tvTema = findViewById(R.id.tvTema);
         tvAcelerometro = findViewById(R.id.tvAcelerometro);
 
-        // Configurar sensores
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (sensorManager != null) {
             sensorLuz = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
@@ -51,7 +49,6 @@ public class SensoresActivity extends AppCompatActivity implements SensorEventLi
     @Override
     protected void onResume() {
         super.onResume();
-        // Registrar los sensores cuando la pantalla está activa
         if (sensorLuz != null) {
             sensorManager.registerListener(this, sensorLuz, SensorManager.SENSOR_DELAY_NORMAL);
         }
@@ -63,52 +60,57 @@ public class SensoresActivity extends AppCompatActivity implements SensorEventLi
     @Override
     protected void onPause() {
         super.onPause();
-        // Desregistrar para ahorrar batería
         sensorManager.unregisterListener(this);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            // 🌞 SENSOR DE LUZ: Cambiar tema automáticamente
             float lux = event.values[0];
             tvLuz.setText(String.format("Nivel de luz: %.0f lux", lux));
 
             if (lux < 10) {
-                // Poca luz -> Modo Oscuro
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 tvTema.setText("Tema actual: Oscuro 🌙");
             } else {
-                // Mucha luz -> Modo Claro
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 tvTema.setText("Tema actual: Claro ☀️");
             }
         } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            // 🏃 ACELERÓMETRO: Detectar agitación (Shake)
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
 
-            long tiempoActual = System.currentTimeMillis();
-            if ((tiempoActual - ultimoTiempoMovimiento) > 1000) { // Evitar múltiples detecciones seguidas
-                long diff = tiempoActual - ultimoTiempoMovimiento;
-                float speed = Math.abs(x + y + z - ultimoX - ultimoY - ultimoZ) / diff * 10000;
-
-                if (speed > UMBRAL_AGITACION) {
-                    tvAcelerometro.setText("¡Dispositivo agitado! 🔄");
-                    Toast.makeText(this, "¡Agitaste el celular!", Toast.LENGTH_SHORT).show();
-                    // Aquí podrías llamar a un método para refrescar datos
-                }
-                ultimoTiempoMovimiento = tiempoActual;
+            // Ignorar la primera lectura para evitar velocidad absurda
+            if (primeraLectura) {
+                ultimaAceleracion[0] = x;
+                ultimaAceleracion[1] = y;
+                ultimaAceleracion[2] = z;
+                primeraLectura = false;
+                return;
             }
-            ultimoX = x;
-            ultimoY = y;
-            ultimoZ = z;
+
+            // Calcular magnitud de la aceleración (no suma simple)
+            float deltaX = x - ultimaAceleracion[0];
+            float deltaY = y - ultimaAceleracion[1];
+            float deltaZ = z - ultimaAceleracion[2];
+            float magnitud = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+
+            long ahora = System.currentTimeMillis();
+            if (magnitud > UMBRAL_SHAKE && (ahora - ultimoTiempoShake) > 1000) {
+                ultimoTiempoShake = ahora;
+                tvAcelerometro.setText("¡Dispositivo agitado! 🔄");
+                Toast.makeText(this, "¡Agitaste el celular!", Toast.LENGTH_SHORT).show();
+            }
+
+            ultimaAceleracion[0] = x;
+            ultimaAceleracion[1] = y;
+            ultimaAceleracion[2] = z;
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // No necesitamos implementar nada aquí
+        // No necesario
     }
 }

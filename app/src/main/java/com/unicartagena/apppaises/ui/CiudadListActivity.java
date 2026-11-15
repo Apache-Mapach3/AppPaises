@@ -34,12 +34,8 @@ public class CiudadListActivity extends AppCompatActivity {
         rvCiudades = findViewById(R.id.rvCiudades);
         rvCiudades.setLayoutManager(new LinearLayoutManager(this));
 
-        findViewById(R.id.btnAgregarCiudad).setOnClickListener(v -> {
-            Intent intent = new Intent(this, CiudadFormActivity.class);
-            startActivity(intent);
-        });
-
-        cargarCiudades();
+        findViewById(R.id.btnAgregarCiudad).setOnClickListener(v ->
+                startActivity(new Intent(this, CiudadFormActivity.class)));
     }
 
     @Override
@@ -55,12 +51,18 @@ public class CiudadListActivity extends AppCompatActivity {
             public void onResponse(Call<List<Ciudad>> call, Response<List<Ciudad>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     rvCiudades.setAdapter(new CiudadAdapter(response.body(), prefs, CiudadListActivity.this));
+                } else if (response.code() == 401) {
+                    prefs.edit().remove("token").apply();
+                    startActivity(new Intent(CiudadListActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(CiudadListActivity.this, "Error " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Ciudad>> call, Throwable t) {
-                Toast.makeText(CiudadListActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CiudadListActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

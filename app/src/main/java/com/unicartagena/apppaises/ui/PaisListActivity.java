@@ -3,7 +3,6 @@ package com.unicartagena.apppaises.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +23,6 @@ import retrofit2.Response;
 public class PaisListActivity extends AppCompatActivity {
 
     private RecyclerView rvPaises;
-    private PaisAdapter adapter;
     private SharedPreferences prefs;
 
     @Override
@@ -36,18 +34,14 @@ public class PaisListActivity extends AppCompatActivity {
         rvPaises = findViewById(R.id.rvPaises);
         rvPaises.setLayoutManager(new LinearLayoutManager(this));
 
-        findViewById(R.id.btnAgregarPais).setOnClickListener(v -> {
-            Intent intent = new Intent(this, PaisFormActivity.class);
-            startActivity(intent);
-        });
-
-        cargarPaises();
+        findViewById(R.id.btnAgregarPais).setOnClickListener(v ->
+                startActivity(new Intent(this, PaisFormActivity.class)));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cargarPaises();
+        cargarPaises(); // Solo aquí, NO en onCreate
     }
 
     private void cargarPaises() {
@@ -56,14 +50,19 @@ public class PaisListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Pais>> call, Response<List<Pais>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    adapter = new PaisAdapter(response.body(), prefs, PaisListActivity.this);
-                    rvPaises.setAdapter(adapter);
+                    rvPaises.setAdapter(new PaisAdapter(response.body(), prefs, PaisListActivity.this));
+                } else if (response.code() == 401) {
+                    prefs.edit().remove("token").apply();
+                    startActivity(new Intent(PaisListActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(PaisListActivity.this, "Error " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Pais>> call, Throwable t) {
-                Toast.makeText(PaisListActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PaisListActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
