@@ -6,35 +6,15 @@ public class Pais implements java.io.Serializable {
     private String presidente;
     private String continente;
     private String nombreHimno;
-    private int numHabitantes;
+    private long numHabitantes;
     private int numDepartamentos;
     private int numMunicipios;
     private String idiomaPpal;
     private int numUniversidades;
     private String tipoDemocracia;
 
-    // Constructor vacío (necesario para Retrofit/Gson)
     public Pais() {}
 
-    // Constructor completo
-    public Pais(Long id, String nombre, String presidente, String continente,
-                String nombreHimno, int numHabitantes, int numDepartamentos,
-                int numMunicipios, String idiomaPpal, int numUniversidades,
-                String tipoDemocracia) {
-        this.id = id;
-        this.nombre = nombre;
-        this.presidente = presidente;
-        this.continente = continente;
-        this.nombreHimno = nombreHimno;
-        this.numHabitantes = numHabitantes;
-        this.numDepartamentos = numDepartamentos;
-        this.numMunicipios = numMunicipios;
-        this.idiomaPpal = idiomaPpal;
-        this.numUniversidades = numUniversidades;
-        this.tipoDemocracia = tipoDemocracia;
-    }
-
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNombre() { return nombre; }
@@ -45,8 +25,8 @@ public class Pais implements java.io.Serializable {
     public void setContinente(String continente) { this.continente = continente; }
     public String getNombreHimno() { return nombreHimno; }
     public void setNombreHimno(String nombreHimno) { this.nombreHimno = nombreHimno; }
-    public int getNumHabitantes() { return numHabitantes; }
-    public void setNumHabitantes(int numHabitantes) { this.numHabitantes = numHabitantes; }
+    public long getNumHabitantes() { return numHabitantes; }
+    public void setNumHabitantes(long numHabitantes) { this.numHabitantes = numHabitantes; }
     public int getNumDepartamentos() { return numDepartamentos; }
     public void setNumDepartamentos(int numDepartamentos) { this.numDepartamentos = numDepartamentos; }
     public int getNumMunicipios() { return numMunicipios; }

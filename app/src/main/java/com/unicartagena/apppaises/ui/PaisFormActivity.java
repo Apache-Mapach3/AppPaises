@@ -2,7 +2,7 @@ package com.unicartagena.apppaises.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,7 +41,6 @@ public class PaisFormActivity extends AppCompatActivity {
         etUniversidades = findViewById(R.id.etUniversidades);
         etDemocracia = findViewById(R.id.etDemocracia);
 
-        // Si viene un país para editar
         if (getIntent().hasExtra("pais")) {
             Pais pais = (Pais) getIntent().getSerializableExtra("pais");
             if (pais != null) {
@@ -63,19 +62,62 @@ public class PaisFormActivity extends AppCompatActivity {
     }
 
     private void guardarPais() {
+        // Validar campos de texto obligatorios
+        if (TextUtils.isEmpty(etNombre.getText().toString().trim())) {
+            etNombre.setError("El nombre es obligatorio");
+            etNombre.requestFocus();
+            return;
+        }
+
+        // Validar campos numéricos con try/catch
+        long habitantes;
+        int departamentos, municipios, universidades;
+
+        try {
+            habitantes = Long.parseLong(etHabitantes.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            etHabitantes.setError("Ingresa un número válido");
+            etHabitantes.requestFocus();
+            return;
+        }
+
+        try {
+            departamentos = Integer.parseInt(etDepartamentos.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            etDepartamentos.setError("Ingresa un número válido");
+            etDepartamentos.requestFocus();
+            return;
+        }
+
+        try {
+            municipios = Integer.parseInt(etMunicipios.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            etMunicipios.setError("Ingresa un número válido");
+            etMunicipios.requestFocus();
+            return;
+        }
+
+        try {
+            universidades = Integer.parseInt(etUniversidades.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            etUniversidades.setError("Ingresa un número válido");
+            etUniversidades.requestFocus();
+            return;
+        }
+
         String token = "Bearer " + prefs.getString("token", "");
 
         Pais pais = new Pais();
-        pais.setNombre(etNombre.getText().toString());
-        pais.setPresidente(etPresidente.getText().toString());
-        pais.setContinente(etContinente.getText().toString());
-        pais.setNombreHimno(etHimno.getText().toString());
-        pais.setNumHabitantes(Integer.parseInt(etHabitantes.getText().toString()));
-        pais.setNumDepartamentos(Integer.parseInt(etDepartamentos.getText().toString()));
-        pais.setNumMunicipios(Integer.parseInt(etMunicipios.getText().toString()));
-        pais.setIdiomaPpal(etIdioma.getText().toString());
-        pais.setNumUniversidades(Integer.parseInt(etUniversidades.getText().toString()));
-        pais.setTipoDemocracia(etDemocracia.getText().toString());
+        pais.setNombre(etNombre.getText().toString().trim());
+        pais.setPresidente(etPresidente.getText().toString().trim());
+        pais.setContinente(etContinente.getText().toString().trim());
+        pais.setNombreHimno(etHimno.getText().toString().trim());
+        pais.setNumHabitantes(habitantes);
+        pais.setNumDepartamentos(departamentos);
+        pais.setNumMunicipios(municipios);
+        pais.setIdiomaPpal(etIdioma.getText().toString().trim());
+        pais.setNumUniversidades(universidades);
+        pais.setTipoDemocracia(etDemocracia.getText().toString().trim());
 
         Call<Pais> call;
         if (paisId == null) {
@@ -91,13 +133,13 @@ public class PaisFormActivity extends AppCompatActivity {
                     Toast.makeText(PaisFormActivity.this, "Guardado exitosamente", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(PaisFormActivity.this, "Error al guardar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PaisFormActivity.this, "Error " + response.code() + " al guardar", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Pais> call, Throwable t) {
-                Toast.makeText(PaisFormActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(PaisFormActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
