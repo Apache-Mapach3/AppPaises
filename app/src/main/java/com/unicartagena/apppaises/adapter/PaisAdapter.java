@@ -56,20 +56,29 @@ public class PaisAdapter extends RecyclerView.Adapter<PaisAdapter.ViewHolder> {
         });
 
         holder.btnEliminar.setOnClickListener(v -> {
+            // Usar getBindingAdapterPosition() para evitar borrar el ítem equivocado
+            int pos = holder.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return;
+
             String token = "Bearer " + prefs.getString("token", "");
             RetrofitClient.getApiService().eliminarPais(token, pais.getId()).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
-                        paises.remove(position);
-                        notifyItemRemoved(position);
-                        Toast.makeText(context, "País eliminado", Toast.LENGTH_SHORT).show();
+                        int currentPos = holder.getBindingAdapterPosition();
+                        if (currentPos != RecyclerView.NO_POSITION) {
+                            paises.remove(currentPos);
+                            notifyItemRemoved(currentPos);
+                            Toast.makeText(context, "País eliminado", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Error " + response.code() + " al eliminar", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(context, "Error al eliminar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error de conexión", Toast.LENGTH_SHORT).show();
                 }
             });
         });

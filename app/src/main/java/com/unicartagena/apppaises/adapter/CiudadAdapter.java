@@ -56,20 +56,28 @@ public class CiudadAdapter extends RecyclerView.Adapter<CiudadAdapter.ViewHolder
         });
 
         holder.btnEliminar.setOnClickListener(v -> {
+            int pos = holder.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return;
+
             String token = "Bearer " + prefs.getString("token", "");
             RetrofitClient.getApiService().eliminarCiudad(token, ciudad.getId()).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
-                        ciudades.remove(position);
-                        notifyItemRemoved(position);
-                        Toast.makeText(context, "Ciudad eliminada", Toast.LENGTH_SHORT).show();
+                        int currentPos = holder.getBindingAdapterPosition();
+                        if (currentPos != RecyclerView.NO_POSITION) {
+                            ciudades.remove(currentPos);
+                            notifyItemRemoved(currentPos);
+                            Toast.makeText(context, "Ciudad eliminada", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Error " + response.code() + " al eliminar", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(context, "Error al eliminar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error de conexión", Toast.LENGTH_SHORT).show();
                 }
             });
         });
