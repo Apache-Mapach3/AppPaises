@@ -3,8 +3,6 @@ package com.unicartagena.apppaises.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
 
+        if (prefs.getString("token", null) == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         findViewById(R.id.btnPaises).setOnClickListener(v ->
                 startActivity(new Intent(this, PaisListActivity.class)));
 
@@ -28,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, CiudadListActivity.class)));
 
         findViewById(R.id.btnReportes).setOnClickListener(v ->
-                Toast.makeText(this, "Próximamente: Reportes", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, ReportesActivity.class)));
 
         findViewById(R.id.btnSensores).setOnClickListener(v ->
-                Toast.makeText(this, "Próximamente: Sensores", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, SensoresActivity.class)));
 
         findViewById(R.id.btnCerrarSesion).setOnClickListener(v -> {
             prefs.edit().remove("token").apply();
