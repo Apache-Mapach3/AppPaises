@@ -40,6 +40,13 @@
         android:layout_marginBottom="16dp"/>
 
     <Button
+        android:id="@+id/btnOlvide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="¿Olvidaste tu contraseña?"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <Button
         android:id="@+id/btnIrRegistro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

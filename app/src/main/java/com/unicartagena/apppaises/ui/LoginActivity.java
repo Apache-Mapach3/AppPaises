@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.unicartagena.apppaises.R;
+import com.unicartagena.apppaises.api.ApiError;
 import com.unicartagena.apppaises.api.RetrofitClient;
 import com.unicartagena.apppaises.model.LoginResponse;
 
@@ -23,7 +24,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
-    private Button btnLogin, btnIrRegistro;
+    private Button btnLogin, btnIrRegistro, btnOlvide;
     private SharedPreferences prefs;
 
     @Override
@@ -45,7 +46,10 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnIrRegistro = findViewById(R.id.btnIrRegistro);
 
+        btnOlvide = findViewById(R.id.btnOlvide);
+
         btnLogin.setOnClickListener(v -> hacerLogin());
+        btnOlvide.setOnClickListener(v -> startActivity(new Intent(this, RecuperarActivity.class)));
         btnIrRegistro.setOnClickListener(v -> startActivity(new Intent(this, RegistroActivity.class)));
     }
 
@@ -72,13 +76,13 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, ApiError.from(response, "No se pudo iniciar sesión"), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Error de conexión (el servidor puede tardar ~1 min en despertar): " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

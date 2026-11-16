@@ -26,6 +26,12 @@ public interface ApiService {
     @POST("api/v1/auth/login")
     Call<LoginResponse> login(@Body Map<String, String> credenciales);
 
+    @POST("api/v1/auth/recuperar")
+    Call<Map<String, String>> recuperar(@Body Map<String, String> body);
+
+    @POST("api/v1/auth/reset-password")
+    Call<Map<String, String>> resetPassword(@Body Map<String, String> body);
+
     // Países
     @GET("api/v1/paises")
     Call<List<Pais>> listarPaises(@Header("Authorization") String token);

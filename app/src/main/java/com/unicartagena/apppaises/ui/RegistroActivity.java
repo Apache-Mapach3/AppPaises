@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.unicartagena.apppaises.R;
+import com.unicartagena.apppaises.api.ApiError;
 import com.unicartagena.apppaises.api.RetrofitClient;
 import com.unicartagena.apppaises.model.Usuario;
 
@@ -45,21 +46,33 @@ public class RegistroActivity extends AppCompatActivity {
             return;
         }
 
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Email no válido");
+            return;
+        }
+        if (password.length() < 6) {
+            etPassword.setError("Mínimo 6 caracteres");
+            return;
+        }
+
+        btnRegistrar.setEnabled(false);
         Usuario usuario = new Usuario(nombre, email, password);
 
         RetrofitClient.getApiService().registrar(usuario).enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                btnRegistrar.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(RegistroActivity.this, "Registro exitoso. Ahora inicia sesión.", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
-                    Toast.makeText(RegistroActivity.this, "Error en el registro", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistroActivity.this, ApiError.from(response, "Error en el registro"), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
+                btnRegistrar.setEnabled(true);
                 Toast.makeText(RegistroActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

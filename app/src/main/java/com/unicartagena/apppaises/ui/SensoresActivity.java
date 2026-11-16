@@ -69,12 +69,11 @@ public class SensoresActivity extends AppCompatActivity implements SensorEventLi
             float lux = event.values[0];
             tvLuz.setText(String.format("Nivel de luz: %.0f lux", lux));
 
-            if (lux < 10) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                tvTema.setText("Tema actual: Oscuro 🌙");
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                tvTema.setText("Tema actual: Claro ☀️");
+            // Solo se cambia el modo si es distinto: cada cambio recrea la Activity
+            int modo = lux < 10 ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+            tvTema.setText(lux < 10 ? "Tema actual: Oscuro 🌙" : "Tema actual: Claro ☀️");
+            if (AppCompatDelegate.getDefaultNightMode() != modo) {
+                AppCompatDelegate.setDefaultNightMode(modo);
             }
         } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
